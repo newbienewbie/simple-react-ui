@@ -50,9 +50,9 @@ Pagination.defaultProps={
     size: 10,
 
     /**
-     * 每页显示的记录数目
+     * 当前第几页
      */
-    current: 10,
+    current: 1,
 
     /**
      * 指的是从当前页码到显示的最大页码或最小页面的距离
