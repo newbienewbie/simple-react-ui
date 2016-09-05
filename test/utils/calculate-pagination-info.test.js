@@ -1,5 +1,5 @@
-const assert=require('assert');
-const calculatePaginationInfo=require('../../lib/utils/calculate-pagination-info.js');
+import assert from 'assert';
+import calculatePaginationInfo from '../../lib/utils/calculate-pagination-info.js';
 
 
 
