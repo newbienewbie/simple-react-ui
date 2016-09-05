@@ -18,6 +18,7 @@ npm install simple-react-pagination
 
 ## 使用
 
+示例：
 ```JavaScript
 import React from 'react';
 import Pagination from 'simple-react-pagination';
@@ -68,7 +69,25 @@ const Posts=React.createClass({
 
 ## 开发
 
-文件夹结构
+### 构建
+
+```
+
+> # 克隆仓库
+> git clone https://github.com/newbienewbie/simple-react-pagination
+
+> # 安装
+> npm install 
+
+> # 构建
+> npm run build
+
+> # 测试
+> npm run test
+```
+
+### 文件夹结构
+
 ```
 simple-react-pagination/
     index.js    # 入口文件，作用是引入经过 babel 转换的ES5文件
@@ -77,7 +96,8 @@ simple-react-pagination/
     dist/       # 编译后的文件夹
 ```
 
-手工进行 babel 编译：
-```
-babel lib --out-dir dist 
-```
+### 模块的暴露方式
+
+源码本身使用 `ES6`+`React.js` 开发 ，用`babel`转码后置入 `/dist`，并交由index.js暴露给用户。
+
+由于在`package.json`中添加了`prepublish`命令， 发布之前会自动进行 babel 编译：
