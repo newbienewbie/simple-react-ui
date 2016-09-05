@@ -1,7 +1,7 @@
 {
   "name": "simple-react-pagination",
   "version": "1.0.0",
-  "description": "",
+  "description": "a simple pagination component written in React.js",
   "main": "index.js",
   "scripts": {
     "test": "mocha test --recursive --compilers js:babel-register"
@@ -10,7 +10,11 @@
     "pagination",
     "react"
   ],
-  "author": "",
+  "author": "webbot",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/newbienewbie/simple-react-pagination"
+  },
   "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.14.0",
