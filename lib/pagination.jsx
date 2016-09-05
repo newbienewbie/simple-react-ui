@@ -3,7 +3,7 @@ import './utils/array-fill-polyfill.js';
 import calculatePaginationInfo from './utils/calculate-pagination-info.js';
 
 
-const Pagination=(props)=>{
+export const Pagination=(props)=>{
     let _info = calculatePaginationInfo(props.count,props.size,props.current,props.semiBandWidth);
     let array = Array(_info.lastDigit - _info.firstDigit + 1).fill()
         .map((d, k) => {

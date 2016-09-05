@@ -10,6 +10,11 @@
 * semiBandWidth: 指的是从当前页码到显示的最大页码或最小页面的距离上限，默认为5。比如，当前页码是3，如果semiBandWidth=5,则lastDigit最大为8。
 * onChange:  当页码改变时触发，默认为(page) => { }
 
+## 安装
+
+```
+npm install simple-react-pagination
+```
 
 ## 使用
 
@@ -59,4 +64,20 @@ const Posts=React.createClass({
         );
     }
 });
+```
+
+## 开发
+
+文件夹结构
+```
+simple-react-pagination/
+    index.js    # 入口文件，作用是引入经过 babel 转换的ES5文件
+    lib/        # 源代码
+    test/       # 测试 
+    dist/       # 编译后的文件夹
+```
+
+手工进行 babel 编译：
+```
+babel lib --out-dir dist 
 ```

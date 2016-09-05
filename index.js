@@ -1,4 +1,5 @@
-import Pagination from  './lib/pagination.jsx';
+// import Pagination from  './lib/pagination.jsx';
+const Pagination=require('./dist/pagination.js');
 
 
 
