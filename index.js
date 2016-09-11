@@ -1,4 +1,4 @@
-const Pagination=require('./dist/pagination.js');
+const Pagination=require('./dist/pagination/index.js');
 
 
 

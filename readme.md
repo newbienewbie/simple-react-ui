@@ -1,19 +1,36 @@
 # simple-react-ui
 
-一个用react实现的简单的分页组件。
+重复造轮子之用React.js实现简单的UI组件。
+
+1. 吃自己的狗粮
+2. 适度测试:不可或缺(减少后期debug时间)，过犹不及(天下武功，唯快不破)
 
 ## 安装
 
 ```
-npm install simple-react-ui
+npm install simple-react-ui --save
 ```
 
 ## 使用
 
+可以一次性全部导入所有SimpleUI组件
+
+```JavaScript
+import SimpleUI from 'simple-react-ui';
+```
+
+大多时候可以按需导入：
+```JavaScript
+import Pagination from 'simple-react-ui/dist/pagination';
+```
+
+
+
 示例：
+
 ```JavaScript
 import React from 'react';
-import Pagination from 'simple-react-pagination';
+import Pagination from 'simple-react-ui/dist/pagination';
 
 const Posts=React.createClass({
     getInitialState(){
