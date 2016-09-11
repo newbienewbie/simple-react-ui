@@ -1,5 +1,5 @@
 import assert from 'assert';
-import calculatePaginationInfo from '../../lib/utils/calculate-pagination-info.js';
+import calculatePaginationInfo from '../../../lib/pagination/utils/calculate-pagination-info.js';
 
 
 

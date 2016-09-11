@@ -1,7 +1,7 @@
 {
-  "name": "simple-react-pagination",
+  "name": "simple-react-ui",
   "version": "1.0.4",
-  "description": "a simple pagination component written in React.js",
+  "description": "a simple react component library written in React.js",
   "main": "index.js",
   "scripts": {
     "build":"./node_modules/.bin/babel ./lib --out-dir ./dist --source-maps --presets es2015,react",
@@ -9,13 +9,13 @@
     "test": "mocha test --recursive --compilers js:babel-register"
   },
   "keywords": [
-    "pagination",
+    "ui",
     "react"
   ],
   "author": "webbot",
   "repository": {
     "type": "git",
-    "url": "https://github.com/newbienewbie/simple-react-pagination"
+    "url": "https://github.com/newbienewbie/simple-react-ui"
   },
   "license": "ISC",
   "devDependencies": {

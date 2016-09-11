@@ -1,8 +1,8 @@
 import assert from 'assert';
-import Pagination from '../lib/pagination.jsx';
+import Pagination from '../../lib/pagination/pagination.jsx';
 import TestUtils from 'react-addons-test-utils';
 import React from 'react';
-import calculatePaginationInfo  from '../lib/utils/calculate-pagination-info.js';
+import calculatePaginationInfo  from '../../lib/pagination/utils/calculate-pagination-info.js';
 
 describe("测试分页组件",function(){
     

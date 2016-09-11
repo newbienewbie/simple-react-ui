@@ -1,5 +1,5 @@
 import React from 'react';
-import './utils/array-fill-polyfill.js';
+import '../utils/array-fill-polyfill.js';
 import calculatePaginationInfo from './utils/calculate-pagination-info.js';
 
 
