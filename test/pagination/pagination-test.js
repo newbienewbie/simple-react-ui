@@ -1,5 +1,5 @@
 import assert from 'assert';
-import Pagination from '../../lib/pagination/pagination.jsx';
+import Pagination from '../../lib/pagination/index.js';
 import TestUtils from 'react-addons-test-utils';
 import React from 'react';
 import calculatePaginationInfo  from '../../lib/pagination/utils/calculate-pagination-info.js';
