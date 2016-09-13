@@ -5,7 +5,6 @@
 1. 自己的狗粮自己一定要吃。
 2. 轻量，可配合 Bootstrap.min.css 使用。
 2. 适时测试:测试不可或缺，追求覆盖率过犹不及
-3. 打算重新发明在 Bootstrap 中需要 JavaScript 的组件
 
 只是JavaScript轮子，暂时不想考虑各浏览器的CSS兼容情况，所以CSS样式就偷懒复用了 Bootstrap 。
 换言之，在页面引入 Bootstrap的css 和这里相应的轮子，即可展示出同样的效果，不再需要 bootstrap.min.js 或者 jquery.min.js。
