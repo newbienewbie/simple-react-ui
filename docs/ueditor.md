@@ -7,6 +7,8 @@
 * 把UEditor相应的文件包放置在浏览器端可以访问的URL路径下，比如，`/static`
 * 引入 simple-react-ui 的 UEditor 组件
 
+这样仅仅是配置好前端，后端仍然需要编写代码，可以使用[express-ueditor](https://www.npmjs.com/package/express-ueditor)充当后端
+
 ```JavaScript
 
 import React from 'react';
