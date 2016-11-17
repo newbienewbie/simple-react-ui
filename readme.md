@@ -113,6 +113,6 @@ simple-react-ui/
 
 ### 模块的暴露方式
 
-源码本身使用 `ES6`+`React.js` 开发 ，用`babel`转码后置入 `/dist`，并交由`index.js`暴露给用户。
+源码本身使用 `typescript` 开发 ，转码后置入 `/dist`，并交由`index.js`暴露给用户。
 
 由于在`package.json`中添加了`prepublish`命令， 发布之前会自动进行 babel 编译：

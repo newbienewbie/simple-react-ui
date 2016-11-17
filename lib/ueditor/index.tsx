@@ -1,6 +1,6 @@
-import React from  'react';
+import * as React from  'react';
 
-
+declare var UE: any;
 
 /**
  * 百度UEditor的封装
@@ -27,13 +27,13 @@ export const UEditor = React.createClass({
             // 如果UE已经是全局变量了，则说明已经加载了UEditor相应的<script>
             return;
         }else{
-            let scriptConfig=document.querySelector(`script[src='${this.props.uconfigSrc}']`);
+            let scriptConfig:any=document.querySelector(`script[src='${this.props.uconfigSrc}']`);
             if(!scriptConfig){
                 scriptConfig = document.createElement("script");
                 scriptConfig.src = this.props.uconfigSrc;
                 document.body.appendChild(scriptConfig);
             }
-            let scriptEditor=document.querySelector(`script[src='${this.props.ueditorSrc}']`);
+            let scriptEditor:any=document.querySelector(`script[src='${this.props.ueditorSrc}']`);
             if(!scriptEditor){
                 scriptEditor= document.createElement("script");
                 scriptEditor.src = this.props.ueditorSrc;

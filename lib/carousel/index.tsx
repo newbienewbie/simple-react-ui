@@ -1,6 +1,6 @@
-import React from 'react';
-import Item from './item.js';
-import Indicator from './indicator.js';
+import * as React from "react";
+import Item from './item';
+import Indicator from './indicator';
 
 
 export const Carousel=React.createClass({
@@ -30,14 +30,16 @@ export const Carousel=React.createClass({
         previousActiveIndex=previousActiveIndex<0? 
             itemsCount + previousActiveIndex: 
             previousActiveIndex;
-
-        return parseInt(previousActiveIndex % itemsCount);
+        let index:any=previousActiveIndex % itemsCount;
+        // 转换为整数返回
+        return parseInt(index);
     },
 
     calculateNextActiveIndex:function(currentActiveIndex){
-        let nextActiveIndex=currentActiveIndex+1;
-        let itemsCount=this.props.items.length;
-        return parseInt(nextActiveIndex % itemsCount);
+        let nextActiveIndex:number=currentActiveIndex+1;
+        let itemsCount:number=this.props.items.length;
+        let index:any=nextActiveIndex % itemsCount;
+        return parseInt(index);
     },
 
     componentDidMount:function(){

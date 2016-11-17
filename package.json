@@ -4,9 +4,8 @@
   "description": "a simple react component library written in React.js",
   "main": "index.js",
   "scripts": {
-    "build": "./node_modules/.bin/babel ./lib --out-dir ./dist --source-maps --presets es2015,react",
-    "prepublish": "./node_modules/.bin/babel ./lib --out-dir ./dist --source-maps --presets es2015,react",
-    "test": "mocha test --recursive --compilers js:babel-register"
+    "build": "tsc",
+    "test": "mocha test --recursive --use_strict"
   },
   "keywords": [
     "ui",
@@ -19,16 +18,13 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "babel-cli": "^6.14.0",
-    "babel-core": "^6.14.0",
-    "babel-loader": "^6.2.5",
-    "babel-polyfill": "^6.13.0",
-    "babel-preset-es2015": "^6.14.0",
-    "babel-preset-react": "^6.11.1",
-    "mocha": "^3.0.2",
+    "@types/mocha": "^2.2.33",
+    "mocha": "^3.1.2",
     "react-addons-test-utils": "^15.3.1"
   },
   "dependencies": {
+    "@types/react": "^0.14.49",
+    "@types/react-dom": "^0.14.18",
     "react": "^15.3.1",
     "react-dom": "^15.3.1"
   }
