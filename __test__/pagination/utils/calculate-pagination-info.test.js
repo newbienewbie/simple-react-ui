@@ -1,6 +1,6 @@
 const assert =require('assert');
-const calculatePaginationInfo =require('../../../dist/pagination/utils/calculate-pagination-info.js');
-
+//const calculatePaginationInfo =require('../../../dist/pagination/utils/calculate-pagination-info');
+const calculatePaginationInfo=require('../../../dist/pagination/utils/calculate-pagination-info').default;
 
 
 describe("测试 calculate-pagination-info.js" ,function(){
