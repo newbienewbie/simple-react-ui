@@ -85,7 +85,6 @@ const Posts=React.createClass({
 ### 构建
 
 ```
-
 > # 克隆仓库
 > git clone https://github.com/newbienewbie/simple-react-ui
 
@@ -106,7 +105,7 @@ simple-react-ui/
     index.js    # 入口文件，作用是引入经过 babel 转换的ES5文件
     lib/        # 源代码
         pagination/  # 分页组件的源代码
-    test/       # 测试 
+    __test__/       # 测试 
     dist/       # 编译后的文件夹
     doc/        # 文档
 ```
@@ -114,5 +113,3 @@ simple-react-ui/
 ### 模块的暴露方式
 
 源码本身使用 `typescript` 开发 ，转码后置入 `/dist`，并交由`index.js`暴露给用户。
-
-由于在`package.json`中添加了`prepublish`命令， 发布之前会自动进行 babel 编译：
