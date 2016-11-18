@@ -2,7 +2,7 @@
 /**
  * 用于计算页码信息的帮助函数
  */
-function calculatePaginationInfo(totalRecords=10,pageSize=10,currentPage=1,semiBandWidth=5){
+export function calculatePaginationInfo(totalRecords=10,pageSize=10,currentPage=1,semiBandWidth=5){
 
     let totalPages=Math.ceil(totalRecords/pageSize);
     let firstPage=1;
