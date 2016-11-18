@@ -65,15 +65,15 @@ export class Pagination extends React.Component<any,any> {
                     <a href="#" onClick={(e) => {
                         this._genOnClick(e, _info.firstDigit)(e);
                     }} >
-                        <span >&laquo; </span>
+                        &laquo;
                     </a>
                 </li>
                 { array.map(i => {
-                    return <li key={i} onClick={(e) => this._genOnClick(e, i)(e) } ><a href={""+{i}}>{i}</a></li>;
+                    return <li key={i} onClick={(e) => this._genOnClick(e, i)(e) } ><a href={i+''}>{i}</a></li>;
                 }) }
                 <li>
                     <a href="#" onClick={ (e) => this._genOnClick(e, _info.lastDigit)(e) } >
-                        <span >&raquo; </span>
+                        &raquo;
                     </a>
                 </li>
             </ul>
