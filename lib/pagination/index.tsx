@@ -2,41 +2,46 @@ import * as React from 'react';
 import calculatePaginationInfo from './utils/calculate-pagination-info';
 
 
-interface PaginationProps{
-    count:number;
+export interface PaginationProps{
+    
+    /**
+     * 总的记录数目
+     */
+    total:number;
+
+    /**
+     * 每页显示的记录数目
+     */
     size:number;
+
+    /**
+     * 当前第几页
+     */
     current:number;
+
+    /**
+     * 指的是从当前页码到显示的最大页码或最小页面的距离
+     * 比如，当前页码是3，如果semiBandWidth=5,则lastDigit=8
+     */
     semiBandWidth:number;
+
+    /**
+     * 当页码改变时触发
+     */
+    onChange: (page)=>any,
 }
 
+/**
+ * 分页组件
+ */
+export class Pagination extends React.Component<PaginationProps,any> {
 
-export class Pagination extends React.Component<any,any> {
-
-    static defaultProps={
-        /**
-         * 总的记录数目
-         */
-        count: 50,
-        /**
-         * 每页显示的记录数目
-         */
+    static defaultProps:PaginationProps={
+        total: 50,
         size: 10,
-
-        /**
-         * 当前第几页
-         */
         current: 1,
-
-        /**
-         * 指的是从当前页码到显示的最大页码或最小页面的距离
-         * 比如，当前页码是3，如果semiBandWidth=5,则lastDigit=8
-         */
         semiBandWidth: 5,
-        /**
-         * 当页码改变时触发
-         */
-        onChange: (page) => { },
-
+        onChange: (page) =>{ },
     };
 
 
@@ -53,7 +58,7 @@ export class Pagination extends React.Component<any,any> {
     };
 
     render(){
-        let _info = calculatePaginationInfo(this.props.count,this.props.size,this.props.current,this.props.semiBandWidth);
+        let _info = calculatePaginationInfo(this.props.total,this.props.size,this.props.current,this.props.semiBandWidth);
         // 生成一个数组，范围是[firstDigit~lastDigit]
         let array = Array.from(Array(_info.lastDigit - _info.firstDigit + 1), (d, k) => {
             return k + _info.firstDigit;

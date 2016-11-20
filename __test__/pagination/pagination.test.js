@@ -10,7 +10,7 @@ describe("测试分页组件",function(){
     describe('测试规定的总数、分页大小和当前页',function(){
         
         const info=calculatePaginationInfo(123,4,8,5);
-        const component=renderer.create(<Pagination count={123} size={4} current={8} onChange={()=>{}} />);
+        const component=renderer.create(<Pagination total={123} size={4} current={8} onChange={()=>{}} />);
         const tree=component.toJSON();
 
         it("检查最外层元素是否是nav",function(){

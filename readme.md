@@ -64,7 +64,7 @@ const Posts=React.createClass({
                 </div>
 
                 <Pagination 
-                    count={this.state.count} size={this.state.size} 
+                    total={this.state.count} size={this.state.size} 
                     current={this.state.current} 
                     semiBandWidth={this.state.semiBandWidth} 
                     onChange={(page)=>{ 
