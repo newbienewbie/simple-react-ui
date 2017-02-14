@@ -10,6 +10,7 @@ export interface UEditorProps{
     initialContent:string;
     uconfigSrc: string;
     ueditorSrc: string;
+    afterInit:(ue:any)=>void;
 }
 
 
@@ -25,6 +26,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
         height:600,    // 注意这里只能是数字，不可有单位
         width:600,     // 注意这里只能是数字，不可有单位
         initialContent:'',
+        afterInit:(ue:any)=>{},
         uconfigSrc:"/static/ueditor/ueditor.config.js",
         ueditorSrc:"/static/ueditor/ueditor.all.min.js",
     };
@@ -56,6 +58,12 @@ export class UEditor extends React.Component<UEditorProps,any>{
                     initialFrameWidth: props.width,
                     initialFrameHeight: props.height,
                 });
+                ue.setDisabled();
+                ue.ready(function(){
+                    ue.setContent(props.initialContent);
+                    ue.setEnabled();
+                    props.afterInit(ue);
+                });
             }catch(err){
                 console.log('暂时无UE对象可用，等待500ms',err);
                 setTimeout( ()=>{waitUntil(props)}, 500);
@@ -73,10 +81,8 @@ export class UEditor extends React.Component<UEditorProps,any>{
     
     render(){
         let initialContent=Object.assign(this.props.initialContent);
-        return (<script 
-            id={this.props.id} name={this.props.name} 
-            dangerouslySetInnerHTML={{__html:initialContent}}
-            type="text/plain"></script>);
+        return (<script id={this.props.id} name={this.props.name} type="text/plain">
+        </script>);
     }
 
 }
