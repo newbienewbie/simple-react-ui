@@ -22,7 +22,7 @@ export interface BaiduMapProps{
 /**
  * BaiduMap 的 React 封装
  */
-class BaiduMap extends React.Compoenent<BaiduMapProps,any>{
+class BaiduMap extends React.Component<BaiduMapProps,any>{
 
     static defaultProps:BaiduMapProps={
         ak:'',
