@@ -2,11 +2,10 @@
 
 重复造轮子之用React.js实现简单的UI组件。
 
-1. 自己的狗粮自己一定要吃。
-2. 轻量，可配合 Bootstrap.min.css 使用。
-2. 适时测试:测试不可或缺，追求覆盖率过犹不及
+1. 自己的狗粮自己吃。
+2. 轻量，可配合 Bootstrap.min.css 使用。不追求大而全。
 
-只是JavaScript轮子，暂时不想考虑各浏览器的CSS兼容情况，所以CSS样式就偷懒复用了 Bootstrap 。
+只是JavaScript轮子，暂时不想考虑各浏览器的CSS兼容情况，所以`Pagination`组件的CSS样式就偷懒复用了 Bootstrap 。
 换言之，在页面引入 Bootstrap的css 和这里相应的轮子，即可展示出同样的效果，不再需要 bootstrap.min.js 或者 jquery.min.js。
 
 ## 安装
@@ -25,7 +24,14 @@ import SimpleUI from 'simple-react-ui';
 
 大多时候可以按需导入：
 ```JavaScript
+
+// 只导入 Pagination
 import Pagination from 'simple-react-ui/dist/pagination';
+
+// 只导入 BaiduMap
+import BaiduMap from 'simple-react-ui/dist/baidumap';
+
+// 其他...
 ```
 
 
@@ -103,8 +109,9 @@ const Posts=React.createClass({
 ```
 simple-react-ui/
     index.js    # 入口文件，作用是引入经过 babel 转换的ES5文件
-    lib/        # 源代码
+    lib/        # 源代码，采用TypeScript编写
         pagination/  # 分页组件的源代码
+        ...          # 其他组件的源代码
     __test__/       # 测试 
     dist/       # 编译后的文件夹
     doc/        # 文档
@@ -113,3 +120,10 @@ simple-react-ui/
 ### 模块的暴露方式
 
 源码本身使用 `typescript` 开发 ，转码后置入 `/dist`，并交由`index.js`暴露给用户。
+
+## 目前已经实现的组件
+
+[X] Pagination : 分页组件
+[X] Carousel
+[X] UEditor : 百度`UEditor`的`React`封装
+[X] BaiduMap: 百度地图的`React`封装
