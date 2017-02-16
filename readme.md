@@ -123,7 +123,7 @@ simple-react-ui/
 
 ## 目前已经实现的组件
 
-[X] Pagination : 分页组件
-[X] Carousel
-[X] UEditor : 百度`UEditor`的`React`封装
-[X] BaiduMap: 百度地图的`React`封装
+- [X] Pagination : 分页组件
+- [X] Carousel
+- [X] UEditor : 百度`UEditor`的`React`封装
+- [X] BaiduMap: 百度地图的`React`封装
