@@ -1,7 +1,7 @@
-const Pagination=require('./dist/pagination/index.js');
-const Carousel=require('./dist/carousel/index.js');
-const UEditor=require('./dist/ueditor/index.js');
-const BaiduMap=require('./dist/baidu-map/baidu-map.js');
+const Pagination=require('./dist/pagination');
+const Carousel=require('./dist/carousel');
+const UEditor=require('./dist/ueditor');
+const BaiduMap=require('./dist/baidumap');
 
 
 module.exports= {Pagination,Carousel,UEditor,BaiduMap};
