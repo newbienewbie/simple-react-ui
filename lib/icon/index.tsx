@@ -1,4 +1,4 @@
-import Like from './like';
+import {Like} from './like';
 
 
-export default {Like};
+export {Like};
