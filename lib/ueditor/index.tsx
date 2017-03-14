@@ -14,7 +14,6 @@ export interface UEditorProps{
 }
 
 
-
 /**
  * 百度UEditor的React封装
  */
@@ -80,7 +79,6 @@ export class UEditor extends React.Component<UEditorProps,any>{
     }
     
     render(){
-        let initialContent=Object.assign(this.props.initialContent);
         return (<script id={this.props.id} name={this.props.name} type="text/plain">
         </script>);
     }
