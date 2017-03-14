@@ -1,6 +1,6 @@
 {
   "name": "simple-react-ui",
-  "version": "2.4.1",
+  "version": "2.5.1",
   "description": "a simple react component library written in TypeScript+ React.js",
   "main": "index.js",
   "scripts": {
@@ -32,5 +32,8 @@
     "react-dom": "^15.3.1"
   },
   "dependencies": {
+    "es6-promise":"4.1.0"
+  },
+  "peerDependencies": {
   }
 }

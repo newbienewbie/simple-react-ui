@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import {Promise} from 'es6-promise';
 declare var BMap: any;
 
 export interface BaiduMapProps{
