@@ -60,9 +60,15 @@ export class Pagination extends React.Component<PaginationProps,any> {
     render(){
         let _info = calculatePaginationInfo(this.props.total,this.props.size,this.props.current,this.props.semiBandWidth);
         // 生成一个数组，范围是[firstDigit~lastDigit]
-        let array = Array.from(Array(_info.lastDigit - _info.firstDigit + 1), (d, k) => {
-            return k + _info.firstDigit;
-        });
+        const size=_info.lastDigit-_info.firstDigit;
+        let array=[];
+        for(let i=0;i<size;i++){
+             const page=i+_info.firstDigit ;
+             array.push(page);
+        }
+        // let array = Array.from(Array(_info.lastDigit - _info.firstDigit + 1), (d, k) => {
+        //     return k + _info.firstDigit;
+        // });
 
         return (<nav>
             <ul className="pagination">
