@@ -127,3 +127,5 @@ simple-react-ui/
 - [X] Carousel
 - [X] UEditor : 百度`UEditor`的`React`封装
 - [X] BaiduMap: 百度地图的`React`封装
+- [X] Tree: 树形菜单
+- [X] Icon:图标
