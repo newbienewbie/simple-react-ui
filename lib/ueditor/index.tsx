@@ -31,7 +31,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
     };
 
     componentWillMount(){
-        if(typeof UE !='undefined'){
+        if(typeof UE !='undefined' && !!UE.getEditor && !!UE.delEditor){
             // 如果UE已经是全局变量了，则说明已经加载了UEditor相应的<script>
             return;
         }else{
