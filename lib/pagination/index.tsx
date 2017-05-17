@@ -57,6 +57,23 @@ export class Pagination extends React.Component<PaginationProps,any> {
         };
     };
 
+    _genFirstDigitLink(firstDigit){
+        return <li>
+            <a href="#" onClick={(e) => { this._genOnClick(e,firstDigit)(e); }} >
+                &laquo;
+            </a>
+        </li>;
+    }
+
+
+    _genLastDigitLink(lastDigit){
+        return <li>
+            <a href="#" onClick={ (e) => this._genOnClick(e,lastDigit)(e) } >
+                &raquo;
+            </a>
+        </li>;
+    }
+
     render(){
         let _info = calculatePaginationInfo(this.props.total,this.props.size,this.props.current,this.props.semiBandWidth);
         // 生成一个数组，范围是[firstDigit~lastDigit]
@@ -66,27 +83,21 @@ export class Pagination extends React.Component<PaginationProps,any> {
              const page=i+_info.firstDigit ;
              array.push(page);
         }
+        let shouldDisply=true;
+        if(array.length==0){
+            shouldDisply=false;
+        }
         // let array = Array.from(Array(_info.lastDigit - _info.firstDigit + 1), (d, k) => {
         //     return k + _info.firstDigit;
         // });
 
         return (<nav>
             <ul className="pagination">
-                <li>
-                    <a href="#" onClick={(e) => {
-                        this._genOnClick(e, _info.firstDigit)(e);
-                    }} >
-                        &laquo;
-                    </a>
-                </li>
+                {shouldDisply?this._genFirstDigitLink(_info.firstDigit):""}
                 { array.map(i => {
                     return <li key={i} onClick={(e) => this._genOnClick(e, i)(e) } ><a href={i+''}>{i}</a></li>;
                 }) }
-                <li>
-                    <a href="#" onClick={ (e) => this._genOnClick(e, _info.lastDigit)(e) } >
-                        &raquo;
-                    </a>
-                </li>
+                {shouldDisply?this._genLastDigitLink(_info.lastDigit):""}
             </ul>
         </nav>);
 
