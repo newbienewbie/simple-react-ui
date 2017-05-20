@@ -77,7 +77,7 @@ export class Pagination extends React.Component<PaginationProps,any> {
     render(){
         let _info = calculatePaginationInfo(this.props.total,this.props.size,this.props.current,this.props.semiBandWidth);
         // 生成一个数组，范围是[firstDigit~lastDigit]
-        const size=_info.lastDigit-_info.firstDigit;
+        const size=_info.lastDigit-_info.firstDigit+1;
         let array=[];
         for(let i=0;i<size;i++){
              const page=i+_info.firstDigit ;
