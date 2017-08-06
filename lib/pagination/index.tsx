@@ -1,5 +1,5 @@
 import * as React from 'react';
-import calculatePaginationInfo from 'pagination-info';
+import {calculatePaginationInfo} from 'pagination-info';
 
 
 export interface PaginationProps{
