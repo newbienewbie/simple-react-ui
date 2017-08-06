@@ -2,7 +2,7 @@ import assert from 'assert';
 import renderer from'react-test-renderer';
 import React from 'react';
 import Pagination from '../../dist/pagination/index.js';
-import calculatePaginationInfo  from'../../dist/pagination/utils/calculate-pagination-info.js';
+import calculatePaginationInfo  from'pagination-info';
 
 describe("测试分页组件",function(){
     
