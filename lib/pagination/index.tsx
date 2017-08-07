@@ -78,11 +78,11 @@ export class Pagination extends React.Component<PaginationProps,any> {
         let _info = calculatePaginationInfo(this.props.total,this.props.size,this.props.current,this.props.semiBandWidth);
         return (<nav>
             <ul className="pagination">
-                {_info.shouldDisply?this._genFirstDigitLink(_info.firstDigit):""}
-                {_info.array.map(i => {
+                {_info.shouldDisplay?this._genFirstDigitLink(_info.firstDigit):""}
+                {_info.shouldDisplay?_info.array.map(i => {
                     return <li key={i} onClick={(e) => this._genOnClick(e, i)(e) } ><a href={i+''}>{i}</a></li>;
-                }) }
-                {_info.shouldDisply?this._genLastDigitLink(_info.lastDigit):""}
+                }):"" }
+                {_info.shouldDisplay?this._genLastDigitLink(_info.lastDigit):""}
             </ul>
         </nav>);
 
