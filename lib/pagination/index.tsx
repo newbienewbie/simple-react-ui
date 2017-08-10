@@ -80,7 +80,7 @@ export class Pagination extends React.Component<PaginationProps,any> {
             <ul className="pagination">
                 {_info.shouldDisplay?this._genFirstDigitLink(_info.firstDigit):""}
                 {_info.shouldDisplay?_info.array.map(i => {
-                    return <li key={i} onClick={(e) => this._genOnClick(e, i)(e) } ><a href={i+''}>{i}</a></li>;
+                    return <li key={i} onClick={(e) => this._genOnClick(e, i)(e) } ><a href={i+''} className={_info.current==i?"active":""}>{i}</a></li>;
                 }):"" }
                 {_info.shouldDisplay?this._genLastDigitLink(_info.lastDigit):""}
             </ul>
