@@ -9,7 +9,12 @@ export interface UEditorProps{
     initialValue:string;
     uconfigSrc: string;
     ueditorSrc: string;
-    afterInit:(ue:any)=>void;
+    /**
+     * 用来接收父组件设置的值
+     */
+    value?:string;
+    afterInit?:(ue:any)=>void;
+    onChange?:(content)=>void;
 }
 
 
@@ -27,10 +32,26 @@ export class UEditor extends React.Component<UEditorProps,any>{
         height:600,    // 注意这里只能是数字，不可有单位
         width:600,     // 注意这里只能是数字，不可有单位
         initialValue:'',
-        afterInit:(ue:any)=>{},
         uconfigSrc:"/static/ueditor/ueditor.config.js",
         ueditorSrc:"/static/ueditor/ueditor.all.min.js",
+        afterInit:(ue:any)=>{},
+        onChange:content=>{},
     };
+
+
+    componentWillReceiveProps(nextProps:UEditorProps){
+        if(UE && UE.getEditor){
+            if(nextProps.value!=this.props.value){
+                let ue = UE.getEditor(this.props.id, {
+                    initialFrameWidth: this.props.width,
+                    initialFrameHeight: this.props.height,
+                });
+                ue.setContent(nextProps.value);
+            }
+        }else{
+            console.log(`error happpens: 试图设置value属性，但是UE.getEditor不可用`);
+        }
+    }
 
     componentWillMount(){
         if(typeof UE !='undefined' && !!UE.getEditor && !!UE.delEditor){
@@ -53,24 +74,42 @@ export class UEditor extends React.Component<UEditorProps,any>{
     }
 
     componentDidMount(){
-        function waitUntil(props:UEditorProps){
-            try{
-                let ue = UE.getEditor(props.id, {
-                    initialFrameWidth: props.width,
-                    initialFrameHeight: props.height,
+        const {id,width,height,initialValue,afterInit,onChange}=this.props;
+        function timeoutPromise(timeout){
+            return new Promise(function(resolve,reject){
+                setTimeout(function() {
+                    resolve();
+                }, timeout);
+            });
+        }
+        function waitUntil(){
+            return new Promise(function(resolve,reject){
+                let ue = UE.getEditor(id, {
+                    initialFrameWidth: width,
+                    initialFrameHeight:height,
                 });
                 ue.setDisabled();
                 ue.ready(function(){
-                    ue.setContent(props.initialValue);
+                    ue.setContent(initialValue);
                     ue.setEnabled();
-                    props.afterInit(ue);
+                    // 触发 afterInit() 回调
+                    afterInit(ue);
+                    // 监听UE的 contentChange 事件
+                    ue.addListener( 'contentChange', function( type ) {
+                        const content=ue.getContent();
+                        // 触发 onChange()  回调
+                        onChange(content);
+                    });
+                    resolve(ue);
                 });
-            }catch(err){
-                console.log('暂时无UE对象可用，等待50ms',err);
-                setTimeout( ()=>{waitUntil(props)}, 50);
-            }
+            }).catch(err=>{
+                console.log("there's no UE object yet. Waitting 30ms ...",err);
+                return timeoutPromise(30).then(()=>{
+                    return waitUntil();
+                });
+            });
         }
-        waitUntil(this.props);
+        return waitUntil();
     }
 
     componentWillUnmount(){
