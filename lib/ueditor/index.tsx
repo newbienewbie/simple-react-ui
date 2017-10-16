@@ -79,7 +79,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
     }
     
     render(){
-        return (<script id={this.props.id} name={this.props.name} type="text/plain">
+        return (<script id={this.props.id} type="text/plain">
         </script>);
     }
 

@@ -3,27 +3,37 @@ import Item from './item';
 import Indicator from './indicator';
 
 
-export const Carousel=React.createClass({
+export interface CarouselProps{
+    items: Array<any>;
+    autoplayInterval:Number;
+    style:any;
+};
 
-    getDefaultProps:function(){
-        return {
-            items: [],
-            autoplayInterval:2500,
-            style:{},
-        };
-    },
+export interface CarouselState{
+    items:Array<any>;
+    indicators:Array<any>;
+    activeIndex:Number;
+    intervalId:any;
+}
 
 
-    getInitialState:function(){
-        return {
+export class Carousel extends React.Component<CarouselProps,CarouselState>{
+
+    static defaultProps:CarouselProps;
+
+    constructor(props:CarouselProps){
+        super(props);
+        this.state={
             items:this.props.items,
             indicators:[],
             activeIndex:0,
             intervalId:undefined,
         };
-    },
+    }
 
-    calculatePreviousActiveIndex:function(currentActiveIndex){
+
+
+    calculatePreviousActiveIndex(currentActiveIndex){
         let itemsCount=this.props.items.length;
 
         let previousActiveIndex=currentActiveIndex-1;
@@ -33,16 +43,16 @@ export const Carousel=React.createClass({
         let index:any=previousActiveIndex % itemsCount;
         // 转换为整数返回
         return parseInt(index);
-    },
+    }
 
-    calculateNextActiveIndex:function(currentActiveIndex){
+    calculateNextActiveIndex(currentActiveIndex){
         let nextActiveIndex:number=currentActiveIndex+1;
         let itemsCount:number=this.props.items.length;
         let index:any=nextActiveIndex % itemsCount;
         return parseInt(index);
-    },
+    }
 
-    componentDidMount:function(){
+    componentDidMount(){
         let activeIndex=this.state.activeIndex;
         let itemsCount=this.state.items.length;
         let intervalId=setInterval(
@@ -53,9 +63,9 @@ export const Carousel=React.createClass({
             this.props.autoplayInterval
         );
         this.setState({intervalId});
-    },
+    }
 
-    render:function(){
+    render(){
         let state=this.state;
         return ( 
         <div className="carousel slide" data-ride="carousel">
@@ -98,8 +108,14 @@ export const Carousel=React.createClass({
                 <span className="sr-only">Next</span>
             </a>
         </div>);
-    },
-});
+    }
+}
+
+Carousel.defaultProps={
+    items: [],
+    autoplayInterval:2500,
+    style:{},
+};
 
 
 
