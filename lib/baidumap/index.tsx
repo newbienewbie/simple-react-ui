@@ -59,7 +59,7 @@ class BaiduMap extends React.Component<BaiduMapProps,any>{
                 resolve(map);
             }).catch(err=>{
                 console.log("there's no BMap yet. Waitting ...",err);
-                return timeoutPromise(300).then(()=>{
+                return timeoutPromise(200).then(()=>{
                     return waitUntil(props);
                 });
             });

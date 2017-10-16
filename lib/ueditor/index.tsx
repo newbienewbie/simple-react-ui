@@ -4,10 +4,9 @@ declare var UE: any;
 
 export interface UEditorProps{
     id: string;
-    name: string;
     height: number;   
     width: number;    
-    initialContent:string;
+    initialValue:string;
     uconfigSrc: string;
     ueditorSrc: string;
     afterInit:(ue:any)=>void;
@@ -19,12 +18,15 @@ export interface UEditorProps{
  */
 export class UEditor extends React.Component<UEditorProps,any>{
 
+    constructor(props:UEditorProps){
+        super(props);
+    }
+
     static defaultProps:UEditorProps={
         id:'ueditorcontainer',
-        name:'uecontent',
         height:600,    // 注意这里只能是数字，不可有单位
         width:600,     // 注意这里只能是数字，不可有单位
-        initialContent:'',
+        initialValue:'',
         afterInit:(ue:any)=>{},
         uconfigSrc:"/static/ueditor/ueditor.config.js",
         ueditorSrc:"/static/ueditor/ueditor.all.min.js",
@@ -51,7 +53,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
     }
 
     componentDidMount(){
-        function waitUntil(props){
+        function waitUntil(props:UEditorProps){
             try{
                 let ue = UE.getEditor(props.id, {
                     initialFrameWidth: props.width,
@@ -59,13 +61,13 @@ export class UEditor extends React.Component<UEditorProps,any>{
                 });
                 ue.setDisabled();
                 ue.ready(function(){
-                    ue.setContent(props.initialContent);
+                    ue.setContent(props.initialValue);
                     ue.setEnabled();
                     props.afterInit(ue);
                 });
             }catch(err){
-                console.log('暂时无UE对象可用，等待500ms',err);
-                setTimeout( ()=>{waitUntil(props)}, 500);
+                console.log('暂时无UE对象可用，等待50ms',err);
+                setTimeout( ()=>{waitUntil(props)}, 50);
             }
         }
         waitUntil(this.props);
