@@ -23,6 +23,8 @@ import SimpleUI from 'simple-react-ui';
 ```
 
 大多时候可以按需导入：
+
+
 ```JavaScript
 
 // 只导入 Pagination
@@ -35,6 +37,7 @@ import BaiduMap from 'simple-react-ui/dist/baidumap';
 ```
 
 
+### 分页
 
 示例：
 
@@ -85,6 +88,23 @@ const Posts=React.createClass({
     }
 });
 ```
+
+
+### UEditor 
+
+提供两种模式， *受控模式* 和 *非受控模式* ，请参见文档。
+
+在受控模式下，用户可以通过
+* `value`属性：父组件可以通过`value`属性来动态设置编辑器的内容
+* `onChange(content)` 事件处理函数，当编辑器的内容发生变化以`onChange(content)`的方式通知父组件
+
+在非受控模式下，用户主要通过
+* `initialContent` 属性来提供初始值
+* `afterInit(ue)` 回调函数来与 `UEditor` 互动，其中`ue`参数是`UE.getEditor('id')`返回的编辑器实例。
+
+`afterInit(ue)`在某种程度上类似于原生`React`组件的`ref`回调，我们可以把`ue`传递给父组件，从而可以在父组件中来做任何`UEditor`可以做的事儿。
+
+更多请参见 [文档](https://github.com/newbienewbie/simple-react-ui/blob/master/docs/ueditor.md)
 
 ## 开发
 

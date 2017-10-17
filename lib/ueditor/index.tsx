@@ -3,20 +3,54 @@ import * as React from  'react';
 declare var UE: any;
 
 export interface UEditorProps{
+    /**
+     * 唯一标识符
+     */
     id: string;
+    /**
+     * 编辑器高度
+     */
     height: number;   
+    /**
+     * 编辑器宽度
+     */
     width: number;    
-    initialValue:string;
+    /**
+     * 脚本 uconfig.js 的src
+     */
     uconfigSrc: string;
+    /**
+     * 脚本 ueditor.js 的src
+     */
     ueditorSrc: string;
     /**
-     * 用来接收父组件设置的值
+     * 表示在非受控模式下，为编辑器设置初始值。
+     * 不能和 value 同时起用！
+     */
+    initialContent?:string;
+    /**
+     * 表示在受控模式下，用来接收父组件设置的值
      */
     value?:string;
+    /**
+     * 类似于原生React的ref回调
+     */
     afterInit?:(ue:any)=>void;
+    /**
+     * 当编辑器内容变化候自动触发
+     */
     onChange?:(content)=>void;
 }
 
+
+
+function fixControlledValue(value){
+    if (typeof value === 'undefined' || value === null) {
+        return '';
+    }
+    return value;
+}
+  
 
 /**
  * 百度UEditor的React封装
@@ -31,7 +65,6 @@ export class UEditor extends React.Component<UEditorProps,any>{
         id:'ueditorcontainer',
         height:600,    // 注意这里只能是数字，不可有单位
         width:600,     // 注意这里只能是数字，不可有单位
-        initialValue:'',
         uconfigSrc:"/static/ueditor/ueditor.config.js",
         ueditorSrc:"/static/ueditor/ueditor.all.min.js",
         afterInit:(ue:any)=>{},
@@ -39,14 +72,25 @@ export class UEditor extends React.Component<UEditorProps,any>{
     };
 
 
+    /**
+     * 
+     * @param nextProps 
+     */
     componentWillReceiveProps(nextProps:UEditorProps){
         if(UE && UE.getEditor){
-            if(nextProps.value!=this.props.value){
+            // 只有在受控模式下，才会试图同步编辑器的值
+            if( 'value' in nextProps){
+                const nextValue=fixControlledValue(nextProps.value);
+                const thisValue=fixControlledValue(this.props.value);
+                // 如果下一个value值和现在的value值相同，则不再同步。
+                if(nextValue == thisValue){
+                    return;
+                }
                 let ue = UE.getEditor(this.props.id, {
                     initialFrameWidth: this.props.width,
                     initialFrameHeight: this.props.height,
                 });
-                ue.setContent(nextProps.value);
+                ue.setContent(nextValue);
             }
         }else{
             console.log(`error happpens: 试图设置value属性，但是UE.getEditor不可用`);
@@ -74,7 +118,13 @@ export class UEditor extends React.Component<UEditorProps,any>{
     }
 
     componentDidMount(){
-        const {id,width,height,initialValue,afterInit,onChange}=this.props;
+        let {id,width,height,initialContent,value,afterInit,onChange}=this.props;
+        if('value' in this.props){
+            value=fixControlledValue(value);
+            initialContent=value;    
+        }else{
+            initialContent=fixControlledValue(initialContent);
+        }
         function timeoutPromise(timeout){
             return new Promise(function(resolve,reject){
                 setTimeout(function() {
@@ -90,7 +140,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
                 });
                 ue.setDisabled();
                 ue.ready(function(){
-                    ue.setContent(initialValue);
+                    ue.setContent(initialContent);
                     ue.setEnabled();
                     // 触发 afterInit() 回调
                     afterInit(ue);
@@ -103,7 +153,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
                     resolve(ue);
                 });
             }).catch(err=>{
-                console.log("there's no UE object yet. Waitting 30ms ...",err);
+                console.log("the UE has not been ready yet. waitting 30ms ...",err);
                 return timeoutPromise(30).then(()=>{
                     return waitUntil();
                 });
@@ -120,8 +170,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
     }
     
     render(){
-        return (<script id={this.props.id} type="text/plain">
-        </script>);
+        return (<script id={this.props.id} type="text/plain"></script>);
     }
 
 }
