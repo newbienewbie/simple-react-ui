@@ -1,6 +1,7 @@
 import * as React from  'react';
 
 declare var UE: any;
+declare var window: any;
 
 export interface UEditorProps{
     /**
@@ -59,6 +60,13 @@ export class UEditor extends React.Component<UEditorProps,any>{
 
     constructor(props:UEditorProps){
         super(props);
+        this.state={
+            ueditorEventRegistered:false,
+        };
+        this._getUEditorAsync=this._getUEditorAsync.bind(this);
+        this._getUEditorSync=this._getUEditorSync.bind(this);
+        this._initUEditor=this._initUEditor.bind(this);
+        this._waitUntilUEditorloaded=this._waitUntilUEditorloaded.bind(this);
     }
 
     static defaultProps:UEditorProps={
@@ -71,49 +79,126 @@ export class UEditor extends React.Component<UEditorProps,any>{
         onChange:content=>{},
     };
 
+    _getUEditorAsync(){
+        let {id,width,height}=this.props;
+        return new Promise((resolve,reject)=>{
+            const ue=UE.getEditor(id, {
+                initialFrameWidth: width,
+                initialFrameHeight:height,
+            });
+            resolve(ue);
+        }).catch(e=>{
+            console.log(`ue not yet ready...`);
+            return this._timeoutPromise(30)
+                .then(this._getUEditorAsync()) ;
+        });
+    }
+
+    _getUEditorSync(){
+        let {id,width,height}=this.props;
+        const ue=UE.getEditor(id, {
+            initialFrameWidth: width,
+            initialFrameHeight:height,
+        });
+        return ue;
+    }
+
+    _initUEditor(){
+        const ue=this._getUEditorSync();
+        if(this.state.ueditorEventRegistered){
+            return Promise.resolve(ue);
+        }else{
+            const onChange=this.props.onChange;
+            return new Promise((resolve,reject)=>{
+                ue.addListener('beforeSetContent',function(){
+                    window.SIMEPLE_REACT_UI_UEDITOR_FOCUS_ELEMENT=document.activeElement;
+                    console.log('before',window.SIMEPLE_REACT_UI_UEDITOR_FOCUS_ELEMENT);
+                }) ;
+                ue.addListener( 'contentChange', function( type ) {
+                    const content=ue.getContent();
+                    // 触发 onChange()  回调
+                    onChange(content);
+                    const element=window.SIMEPLE_REACT_UI_UEDITOR_FOCUS_ELEMENT;
+                    if(element && element.focus){ element.focus()}
+                    console.log('onchagne ',element);
+                });
+                ue.addListener('afterSetContent',function(){
+                    const element=window.SIMEPLE_REACT_UI_UEDITOR_FOCUS_ELEMENT;
+                    if(element && element.focus){ element.focus()}
+                    console.log('after',element);
+                });
+                this.setState({ueditorEventRegistered:true},()=>{
+                    resolve(ue);
+                });
+            });
+        }
+
+    }
+
+    _timeoutPromise(timeout){
+        return new Promise(function(resolve,reject){
+            setTimeout(resolve, timeout);
+        });
+    }
+
+    _waitUntilUEditorloaded(){
+        const _initUEditor=this._initUEditor;
+        let {id,width,height,onChange}=this.props;
+        const timeoutPromise=this._timeoutPromise;
+        function waitUntil(){
+            return new Promise((resolve,reject)=>{
+                let ue = UE.getEditor(id, {
+                    initialFrameWidth: width,
+                    initialFrameHeight:height,
+                });
+                ue.setDisabled();
+                ue.ready(()=>{ 
+                    ue.setEnabled(); 
+                    ue.blur();
+                    _initUEditor().then(ue=>resolve(ue));
+                });
+            }).catch(err=>{
+                console.log("the UE has not been ready yet. waitting 30ms ...",err);
+                return timeoutPromise(30).then(()=>{
+                    return waitUntil();
+                });
+            });
+        }
+        return waitUntil();
+    }
 
     /**
      * 
      * @param nextProps 
      */
     componentWillReceiveProps(nextProps:UEditorProps){
-        if(UE && UE.getEditor){
-            // 只有在受控模式下，才会试图同步编辑器的值
-            if( 'value' in nextProps){
-                const nextValue=fixControlledValue(nextProps.value);
-                const thisValue=fixControlledValue(this.props.value);
-                // 如果下一个value值和现在的value值相同，则不再同步。
-                if(nextValue == thisValue){
-                    return;
+        return this._getUEditorAsync()
+            .then(ue=>{
+                // 只有在受控模式下，才会试图同步编辑器的值
+                if( 'value' in nextProps){
+                    const nextValue=fixControlledValue(nextProps.value);
+                    const thisValue=fixControlledValue(this.props.value);
+                    // 如果下一个value值和现在的value值相同，则不再同步。
+                    if(nextValue !== thisValue){
+                        ue.setContent(nextValue,false,true); // 不追加，不触发选区变化
+                        return;
+                    }
                 }
-                let ue = UE.getEditor(this.props.id, {
-                    initialFrameWidth: this.props.width,
-                    initialFrameHeight: this.props.height,
-                });
-                ue.setContent(nextValue);
-            }
-        }else{
-            console.log(`error happpens: 试图设置value属性，但是UE.getEditor不可用`);
-        }
+            });
     }
 
     componentWillMount(){
-        if(typeof UE !='undefined' && !!UE.getEditor && !!UE.delEditor){
-            // 如果UE已经是全局变量了，则说明已经加载了UEditor相应的<script>
-            return;
-        }else{
-            let scriptConfig:any=document.querySelector(`script[src='${this.props.uconfigSrc}']`);
-            if(!scriptConfig){
-                scriptConfig = document.createElement("script");
-                scriptConfig.src = this.props.uconfigSrc;
-                document.body.appendChild(scriptConfig);
-            }
-            let scriptEditor:any=document.querySelector(`script[src='${this.props.ueditorSrc}']`);
-            if(!scriptEditor){
-                scriptEditor= document.createElement("script");
-                scriptEditor.src = this.props.ueditorSrc;
-                document.body.appendChild(scriptEditor);
-            }
+        let scriptConfig:any=document.querySelector(`script[src='${this.props.uconfigSrc}']`);
+        if(!scriptConfig){
+            scriptConfig = document.createElement("script");
+            scriptConfig.src = this.props.uconfigSrc;
+            document.body.appendChild(scriptConfig);
+        }
+        let scriptEditor:any=document.querySelector(`script[src='${this.props.ueditorSrc}']`);
+        if(!scriptEditor){
+            scriptEditor= document.createElement("script");
+            scriptEditor.src = this.props.ueditorSrc;
+            document.body.appendChild(scriptEditor);
         }
     }
 
@@ -125,41 +210,15 @@ export class UEditor extends React.Component<UEditorProps,any>{
         }else{
             initialContent=fixControlledValue(initialContent);
         }
-        function timeoutPromise(timeout){
-            return new Promise(function(resolve,reject){
-                setTimeout(function() {
-                    resolve();
-                }, timeout);
+
+        return this._waitUntilUEditorloaded()
+            .then(ue=>{
+                const element:any=document.activeElement;
+                ue.setContent(initialContent);
+                element.focus();
+                // 触发 afterInit() 回调
+                afterInit(ue);
             });
-        }
-        function waitUntil(){
-            return new Promise(function(resolve,reject){
-                let ue = UE.getEditor(id, {
-                    initialFrameWidth: width,
-                    initialFrameHeight:height,
-                });
-                ue.setDisabled();
-                ue.ready(function(){
-                    ue.setContent(initialContent);
-                    ue.setEnabled();
-                    // 触发 afterInit() 回调
-                    afterInit(ue);
-                    // 监听UE的 contentChange 事件
-                    ue.addListener( 'contentChange', function( type ) {
-                        const content=ue.getContent();
-                        // 触发 onChange()  回调
-                        onChange(content);
-                    });
-                    resolve(ue);
-                });
-            }).catch(err=>{
-                console.log("the UE has not been ready yet. waitting 30ms ...",err);
-                return timeoutPromise(30).then(()=>{
-                    return waitUntil();
-                });
-            });
-        }
-        return waitUntil();
     }
 
     componentWillUnmount(){
