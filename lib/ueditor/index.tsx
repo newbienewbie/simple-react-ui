@@ -80,6 +80,8 @@ export class UEditor extends React.Component<UEditorProps,any>{
     };
 
     _getUEditorAsync(){
+        this._createScript();
+        if(UE){}
         let {id,width,height}=this.props;
         return new Promise((resolve,reject)=>{
             const ue=UE.getEditor(id, {
@@ -88,8 +90,8 @@ export class UEditor extends React.Component<UEditorProps,any>{
             });
             resolve(ue);
         }).catch(e=>{
-            console.log(`ue not yet ready...`);
-            return this._timeoutPromise(30)
+            console.log(`ue not yet ready...`,e);
+            return this._timeoutPromise(300)
                 .then(this._getUEditorAsync()) ;
         });
     }
@@ -118,14 +120,22 @@ export class UEditor extends React.Component<UEditorProps,any>{
                     const content=ue.getContent();
                     // 触发 onChange()  回调
                     onChange(content);
-                    const element=window.SIMEPLE_REACT_UI_UEDITOR_FOCUS_ELEMENT;
-                    if(element && element.focus){ element.focus()}
-                    console.log('onchagne ',element);
+                    const activeElement=document.activeElement;
+                    if(activeElement 
+                        && activeElement.tagName.trim().toLowerCase()=="iframe" 
+                        && activeElement.id.trim().toLocaleLowerCase()=='ueditor_0'
+                    ){
+                        ue.focus();
+                    }else{
+                        const element=window.SIMEPLE_REACT_UI_UEDITOR_FOCUS_ELEMENT;
+                        if(element && element.focus){ 
+                            element.focus()
+                        }
+                    }
                 });
                 ue.addListener('afterSetContent',function(){
                     const element=window.SIMEPLE_REACT_UI_UEDITOR_FOCUS_ELEMENT;
                     if(element && element.focus){ element.focus()}
-                    console.log('after',element);
                 });
                 this.setState({ueditorEventRegistered:true},()=>{
                     resolve(ue);
@@ -167,6 +177,21 @@ export class UEditor extends React.Component<UEditorProps,any>{
         return waitUntil();
     }
 
+    _createScript(){
+        let scriptConfig:any=document.querySelector(`script[src='${this.props.uconfigSrc}']`);
+        if(!scriptConfig){
+            scriptConfig = document.createElement("script");
+            scriptConfig.src = this.props.uconfigSrc;
+            document.body.appendChild(scriptConfig);
+        }
+        let scriptEditor:any=document.querySelector(`script[src='${this.props.ueditorSrc}']`);
+        if(!scriptEditor){
+            scriptEditor= document.createElement("script");
+            scriptEditor.src = this.props.ueditorSrc;
+            document.body.appendChild(scriptEditor);
+        }
+    }
+
     /**
      * 
      * @param nextProps 
@@ -188,18 +213,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
     }
 
     componentWillMount(){
-        let scriptConfig:any=document.querySelector(`script[src='${this.props.uconfigSrc}']`);
-        if(!scriptConfig){
-            scriptConfig = document.createElement("script");
-            scriptConfig.src = this.props.uconfigSrc;
-            document.body.appendChild(scriptConfig);
-        }
-        let scriptEditor:any=document.querySelector(`script[src='${this.props.ueditorSrc}']`);
-        if(!scriptEditor){
-            scriptEditor= document.createElement("script");
-            scriptEditor.src = this.props.ueditorSrc;
-            document.body.appendChild(scriptEditor);
-        }
+        return this._createScript();
     }
 
     componentDidMount(){

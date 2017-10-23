@@ -1,6 +1,6 @@
 {
   "name": "simple-react-ui",
-  "version": "3.0.1",
+  "version": "3.0.3",
   "description": "a simple react component library written in TypeScript+ React.js",
   "main": "dist/index.js",
   "scripts": {
