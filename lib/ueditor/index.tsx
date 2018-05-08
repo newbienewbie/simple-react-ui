@@ -1,4 +1,5 @@
 import * as React from  'react';
+import {throttle} from "../utils/throttle";
 
 declare var UE: any;
 declare var window: any;
@@ -33,6 +34,11 @@ export interface UEditorProps{
      * 表示在受控模式下，用来接收父组件设置的值
      */
     value?:string;
+
+    /**
+     * ContentChange的 节流时间间隔
+     */
+    contentChangeThrottleTime : number;
     /**
      * 类似于原生React的ref回调
      */
@@ -75,6 +81,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
         width:600,     // 注意这里只能是数字，不可有单位
         uconfigSrc:"/static/ueditor/ueditor.config.js",
         ueditorSrc:"/static/ueditor/ueditor.all.min.js",
+        contentChangeThrottleTime: 100,
         afterInit:(ue:any)=>{},
         onChange:content=>{},
     };
@@ -105,6 +112,25 @@ export class UEditor extends React.Component<UEditorProps,any>{
         return ue;
     }
 
+    _onContentChange(type) {
+        const ue=this._getUEditorSync();
+        const content = ue.getContent();
+        // 触发 onChange()  回调
+        this.props.onChange(content);
+        const activeElement = document.activeElement;
+        if (activeElement
+            && activeElement.tagName.trim().toLowerCase() == "iframe"
+            && activeElement.id.trim().toLocaleLowerCase() == 'ueditor_0'
+        ) {
+            ue.focus();
+        } else {
+            const element = window.SIMEPLE_REACT_UI_UEDITOR_FOCUS_ELEMENT;
+            if (element && element.focus) {
+                element.focus()
+            }
+        }
+    }
+
     _initUEditor(){
         const ue=this._getUEditorSync();
         if(this.state.ueditorEventRegistered){
@@ -116,23 +142,11 @@ export class UEditor extends React.Component<UEditorProps,any>{
                     window.SIMEPLE_REACT_UI_UEDITOR_FOCUS_ELEMENT=document.activeElement;
                     console.log('before',window.SIMEPLE_REACT_UI_UEDITOR_FOCUS_ELEMENT);
                 }) ;
-                ue.addListener( 'contentChange', function( type ) {
-                    const content=ue.getContent();
-                    // 触发 onChange()  回调
-                    onChange(content);
-                    const activeElement=document.activeElement;
-                    if(activeElement 
-                        && activeElement.tagName.trim().toLowerCase()=="iframe" 
-                        && activeElement.id.trim().toLocaleLowerCase()=='ueditor_0'
-                    ){
-                        ue.focus();
-                    }else{
-                        const element=window.SIMEPLE_REACT_UI_UEDITOR_FOCUS_ELEMENT;
-                        if(element && element.focus){ 
-                            element.focus()
-                        }
-                    }
-                });
+
+                // 100ms内最多调用一次contentChange
+                let _onContentChange=throttle(this._onContentChange.bind(this),this.props.contentChangeThrottleTime,this);
+                ue.addListener( 'contentChange', _onContentChange);
+
                 ue.addListener('afterSetContent',function(){
                     const element=window.SIMEPLE_REACT_UI_UEDITOR_FOCUS_ELEMENT;
                     if(element && element.focus){ element.focus()}
