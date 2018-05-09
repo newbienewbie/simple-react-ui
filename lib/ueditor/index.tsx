@@ -31,7 +31,7 @@ export interface UEditorProps{
      */
     initialContent?:string;
     /**
-     * 表示在受控模式下，用来接收父组件设置的值
+     * 如果提供该属性，则表示是在受控模式下使用，由父组件设置
      */
     value?:string;
 
@@ -44,9 +44,11 @@ export interface UEditorProps{
      */
     afterInit?:(ue:any)=>void;
     /**
-     * 当编辑器内容变化候自动触发
+     * 当编辑器内容变化之后会自动触发的钩子函数。
+     * 可选。
+     * 如果是在受控模式下使用，且当本组件的props.value是由父组件的状态渲染，要避免去改变父组件状态形成事件循环风暴
      */
-    onChange?:(content)=>void;
+    onContentChangeCompleted?:(content)=>void;
 }
 
 
@@ -83,7 +85,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
         ueditorSrc:"/static/ueditor/ueditor.all.min.js",
         contentChangeThrottleTime: 100,
         afterInit:(ue:any)=>{},
-        onChange:content=>{},
+        onContentChangeCompleted:content=>{},
     };
 
     _getUEditorAsync(){
@@ -115,8 +117,9 @@ export class UEditor extends React.Component<UEditorProps,any>{
     _onContentChange(type) {
         const ue=this._getUEditorSync();
         const content = ue.getContent();
-        // 触发 onChange()  回调
-        this.props.onChange(content);
+        // 触发 onContentChangeCompleted()  回调
+        this.props.onContentChangeCompleted(content);
+        // 重置光标焦点——修复UEditor#setContent()光标乱飞问题
         const activeElement = document.activeElement;
         if (activeElement
             && activeElement.tagName.trim().toLowerCase() == "iframe"
@@ -126,7 +129,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
         } else {
             const element = window.SIMEPLE_REACT_UI_UEDITOR_FOCUS_ELEMENT;
             if (element && element.focus) {
-                element.focus()
+                element.focus();
             }
         }
     }
@@ -136,7 +139,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
         if(this.state.ueditorEventRegistered){
             return Promise.resolve(ue);
         }else{
-            const onChange=this.props.onChange;
+            const onChange=this.props.onContentChangeCompleted;
             return new Promise((resolve,reject)=>{
                 ue.addListener('beforeSetContent',function(){
                     window.SIMEPLE_REACT_UI_UEDITOR_FOCUS_ELEMENT=document.activeElement;
@@ -167,7 +170,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
 
     _waitUntilUEditorloaded(){
         const _initUEditor=this._initUEditor;
-        let {id,width,height,onChange}=this.props;
+        let {id,width,height,onContentChangeCompleted}=this.props;
         const timeoutPromise=this._timeoutPromise;
         function waitUntil(){
             return new Promise((resolve,reject)=>{
@@ -216,7 +219,9 @@ export class UEditor extends React.Component<UEditorProps,any>{
                 // 只有在受控模式下，才会试图同步编辑器的值
                 if( 'value' in nextProps){
                     const nextValue=fixControlledValue(nextProps.value);
-                    const thisValue=fixControlledValue(this.props.value);
+                    // const thisValue=fixControlledValue(this.props.value);
+                    // todo : 不知道为啥 nextValue ==== this.props.value 恒成立，所以改成ue.getContent()
+                    const thisValue=fixControlledValue(ue.getContent());
                     // 如果下一个value值和现在的value值相同，则不再同步。
                     if(nextValue !== thisValue){
                         ue.setContent(nextValue,false,true); // 不追加，不触发选区变化
@@ -231,7 +236,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
     }
 
     componentDidMount(){
-        let {id,width,height,initialContent,value,afterInit,onChange}=this.props;
+        let {id,width,height,initialContent,value,afterInit,onContentChangeCompleted}=this.props;
         if('value' in this.props){
             value=fixControlledValue(value);
             initialContent=value;    
