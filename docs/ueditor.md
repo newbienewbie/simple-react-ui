@@ -84,6 +84,7 @@
 
 ## 示例二：以受控模式使用
 
+在受控模式下，需要指定`props.value`以令组件接受来自父组件指定的内容：
 示例一：
 ```javascript
 class AddOrEditForm extends React.Component{
@@ -117,7 +118,19 @@ class AddOrEditForm extends React.Component{
 
 ```
 
-作为受控模式的示例，这里配合 `ant-design`的`Form.create()()` 使用：
+上例中，我们做了以下两件事：
+1. 通过`props.value`迫使`UEditor`组件接受来自父组件的内容，
+2. 通过`onChange()`迫使`UEditor`组件内容在人工输入导致的内容变化后会同步到父状态内
+
+这种操作方式和`React`的`input`非常类似对不对？
+```javascript
+class XForm extends React.Component{
+    render(){
+        <input value={this.state.content} onChange={v=>{ /* ... */}} />
+    }
+}
+```
+不过，受控组件的精华并不在此，我们可以通过编写一个函数，自动绑定`onChange`来做数据同步！作为受控模式的示例，这里配合 `ant-design`的`Form.create()()` 使用：
 ```javascript
 export class PlainAddOrEditForm extends React.Component{
 
@@ -187,3 +200,5 @@ export class PlainAddOrEditForm extends React.Component{
 
 export default Form.create()(PlainAddOrEditForm);
 ```
+
+注意这里的`UEditor`，我们可以继续监听`onChange(content)`事件，不过没必要再手工同步状态了！
