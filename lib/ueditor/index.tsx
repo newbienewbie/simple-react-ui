@@ -47,7 +47,7 @@ export interface UEditorProps{
      * 当编辑器内容变化之后会自动触发的钩子函数。
      * 可选。
      */
-    onContentChangeCompleted?:(content)=>void;
+    onChange?:(content)=>void;
 }
 
 
@@ -84,7 +84,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
         ueditorSrc:"/static/ueditor/ueditor.all.min.js",
         contentChangeThrottleTime: 100,
         afterInit:(ue:any)=>{},
-        onContentChangeCompleted:content=>{},
+        onChange:content=>{},
     };
 
     _getUEditorAsync(){
@@ -116,8 +116,8 @@ export class UEditor extends React.Component<UEditorProps,any>{
     _onContentChange(type) {
         const ue=this._getUEditorSync();
         const content = ue.getContent();
-        // 触发 onContentChangeCompleted()  回调
-        this.props.onContentChangeCompleted(content);
+        // 触发 onChange()  回调
+        this.props.onChange(content);
         // 重置光标焦点——修复UEditor#setContent()光标乱飞问题
         const activeElement = document.activeElement;
         if (activeElement
@@ -138,7 +138,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
         if(this.state.ueditorEventRegistered){
             return Promise.resolve(ue);
         }else{
-            const onChange=this.props.onContentChangeCompleted;
+            const onChange=this.props.onChange;
             return new Promise((resolve,reject)=>{
                 ue.addListener('beforeSetContent',function(){
                     /**
@@ -171,7 +171,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
 
     _waitUntilUEditorloaded(){
         const _initUEditor=this._initUEditor;
-        let {id,width,height,onContentChangeCompleted}=this.props;
+        let {id,width,height,onChange}=this.props;
         const timeoutPromise=this._timeoutPromise;
         function waitUntil(){
             return new Promise((resolve,reject)=>{
@@ -237,7 +237,7 @@ export class UEditor extends React.Component<UEditorProps,any>{
     }
 
     componentDidMount(){
-        let {id,width,height,initialContent,value,afterInit,onContentChangeCompleted}=this.props;
+        let {id,width,height,initialContent,value,afterInit,onChange}=this.props;
         if('value' in this.props){
             value=fixControlledValue(value);
             initialContent=value;    

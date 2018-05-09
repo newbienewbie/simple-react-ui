@@ -26,7 +26,7 @@
 
 在受控模式下，用户可以通过
 * `value`属性：父组件可以通过`props.value`属性来动态设置编辑器的内容
-* `onContentChangeCompleted(content)` 可选的事件处理函数，当编辑器的内容发生变化之后可以选择以`onContentChangeCompleted(content)`的方式通知父组件。
+* `onChange(content)` 可选的事件处理函数，当编辑器的内容发生变化之后可以选择以`onChange(content)`的方式通知父组件。
     * 受控模式下：当父组件改变本组件的`props.value`，或者因为人手工输入内容，导致编辑器内容区发生变化(调用`ue#setContent(content)`)完成之后所触发的事件。
     * 在非受控模式下：其实没必要使用该钩子，因为设定编辑器内容的`ue.setContent()`都是手工调用的。
 
@@ -106,7 +106,7 @@ class AddOrEditForm extends React.Component{
                 }else{ /*当前是新增模式*/ }
             }} 
             value={this.state.description}
-            onContentChangeCompleted={content=>{
+            onChange={content=>{
                 this.setState({
                     description: content,
                 });
