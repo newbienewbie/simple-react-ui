@@ -46,7 +46,6 @@ export interface UEditorProps{
     /**
      * 当编辑器内容变化之后会自动触发的钩子函数。
      * 可选。
-     * 如果是在受控模式下使用，且当本组件的props.value是由父组件的状态渲染，要避免去改变父组件状态形成事件循环风暴
      */
     onContentChangeCompleted?:(content)=>void;
 }
@@ -142,8 +141,10 @@ export class UEditor extends React.Component<UEditorProps,any>{
             const onChange=this.props.onContentChangeCompleted;
             return new Promise((resolve,reject)=>{
                 ue.addListener('beforeSetContent',function(){
+                    /**
+                     * simple-react-ui的UEditor组件中，当前光标元素的缓存
+                     */
                     window.SIMEPLE_REACT_UI_UEDITOR_FOCUS_ELEMENT=document.activeElement;
-                    console.log('before',window.SIMEPLE_REACT_UI_UEDITOR_FOCUS_ELEMENT);
                 }) ;
 
                 // 100ms内最多调用一次contentChange

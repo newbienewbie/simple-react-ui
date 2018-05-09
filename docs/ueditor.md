@@ -16,7 +16,7 @@
 * `initialContent` 属性来提供初始值
 * `afterInit(ue)` 回调函数来与 `UEditor` 互动，其中`ue`参数是`UE.getEditor('id')`返回的编辑器实例。
 
-`afterInit(ue)`在某种程度上类似于原生`React`组件的`ref`回调，我们可以把`ue`传递给父组件，从而可以在父组件中来做任何`UEditor`可以做的事儿。
+`afterInit(ue)`在某种程度上类似于原生`React`组件的`ref`回调，我们可以把`ue`实例传递给父组件保存起来，从而可以在父组件中来做任何原生`UEditor`可以做的事儿。比如当某个按钮被点击，调用`this.ue.getContent()`获取当前值。
 
 注意，用户不得指定`value`属性，否则会自动转换为 *受控模式*
 
@@ -25,8 +25,12 @@
 受控模式是更符合`React`理念使用方式。注意， *受控模式* 和 *非受控模式* 不能共存，二者只巨其一。
 
 在受控模式下，用户可以通过
-* `value`属性：父组件可以通过`value`属性来动态设置编辑器的内容
-* `onChange(content)` 事件处理函数，当编辑器的内容发生变化以`onChange(content)`的方式通知父组件
+* `value`属性：父组件可以通过`props.value`属性来动态设置编辑器的内容
+* `onContentChangeCompleted(content)` 可选的事件处理函数，当编辑器的内容发生变化之后可以选择以`onContentChangeCompleted(content)`的方式通知父组件。
+    * 受控模式下：当父组件改变本组件的`props.value`，或者因为人手工输入内容，导致编辑器内容区发生变化(调用`ue#setContent(content)`)完成之后所触发的事件。
+    * 在非受控模式下：其实没必要使用该钩子，因为设定编辑器内容的`ue.setContent()`都是手工调用的。
+
+注意在受控模式下不要指定`props.initialContent`属性——它会在组件加装完成后被`props.value`属性覆盖掉，也就是说，编辑器中实际的初始化内容是`props.value`。
 
 ## 示例一：以非受控模式使用
 
@@ -64,6 +68,8 @@
     /> 
     <Button onClick={e=>{
         e.preventDefault();
+        const ue=this.ue;
+        let content=ue.getContent();
         // ... ajax post to server
         return fetch('',{/**/})
             .then(resp=>resp.json())
@@ -77,6 +83,39 @@
 ```
 
 ## 示例二：以受控模式使用
+
+示例一：
+```javascript
+class AddOrEditForm extends React.Component{
+
+    render(){
+        // 某个编辑或者
+        <UEditor id="ueditorContainer" name="content" 
+            width={800} height={200}
+            afterInit={(ue)=>{
+                const id=this.props.id;
+                if(!!id){    // 当前是在编辑模式
+                    // 获取最新的数据
+                    return model.methods.detail(id)
+                    .then(info=>{
+                        const state=Object.assign({},info);
+                        this.setState(state,()=>{
+                            ue.setContent(info.description);
+                        });
+                    });
+                }else{ /*当前是新增模式*/ }
+            }} 
+            value={this.state.description}
+            onContentChangeCompleted={content=>{
+                this.setState({
+                    description: content,
+                });
+            }}
+        /> 
+    }
+}
+
+```
 
 作为受控模式的示例，这里配合 `ant-design`的`Form.create()()` 使用：
 ```javascript
